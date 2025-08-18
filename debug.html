@@ -1,107 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App Debug</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f0f0f0; }
-        .test-section { background: white; margin: 10px 0; padding: 15px; border-radius: 5px; }
-        .success { color: green; }
-        .error { color: red; }
-        button { padding: 10px 20px; margin: 5px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Debug</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script defer src="js/script.js"></script>
 </head>
 <body>
-    <h1>Weather App Debug Test</h1>
-    
-    <div class="test-section">
-        <h3>1. Basic JavaScript Test</h3>
-        <button onclick="testBasicJS()">Test JavaScript</button>
-        <div id="js-test"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>2. API Key Test</h3>
-        <button onclick="testAPI()">Test API Key</button>
-        <div id="api-test"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>3. Weather Search Test</h3>
-        <input type="text" id="cityInput" placeholder="Enter city name" value="London">
-        <button onclick="testWeatherSearch()">Search Weather</button>
-        <div id="weather-test"></div>
-    </div>
-    
-    <div class="test-section">
-        <h3>4. Main App Link</h3>
-        <a href="index.html" style="color: blue; text-decoration: underline;">Go to Main Weather App</a>
-    </div>
-
-    <script>
-        const API_KEY = "eb8f614379942f8c9a09fbf3ef414743";
-        
-        function log(elementId, message, isError = false) {
-            const div = document.getElementById(elementId);
-            div.innerHTML += `<div class="${isError ? 'error' : 'success'}">${message}</div>`;
-        }
-        
-        function testBasicJS() {
-            log('js-test', '✅ JavaScript is working');
-            log('js-test', `✅ Current time: ${new Date().toLocaleString()}`);
-        }
-        
-        async function testAPI() {
-            log('api-test', 'Testing API key...');
-            
-            try {
-                const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?q=London&units=metric&appid=${API_KEY}`
-                );
-                const data = await response.json();
-                
-                if (data.cod === 200) {
-                    log('api-test', '✅ API key is working!');
-                    log('api-test', `✅ London: ${data.main.temp}°C, ${data.weather[0].description}`);
-                } else if (data.cod === 401) {
-                    log('api-test', '⚠️ API key not activated yet (will use demo mode)');
-                } else {
-                    log('api-test', `❌ API error: ${data.message}`, true);
-                }
-            } catch (error) {
-                log('api-test', `❌ Network error: ${error.message}`, true);
-            }
-        }
-        
-        async function testWeatherSearch() {
-            const city = document.getElementById('cityInput').value;
-            log('weather-test', `Searching for: ${city}`);
-            
-            try {
-                const response = await fetch(
-                    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
-                );
-                const data = await response.json();
-                
-                if (data.cod === 200) {
-                    log('weather-test', `✅ ${city}: ${data.main.temp}°C, ${data.weather[0].description}`);
-                } else if (data.cod === 401) {
-                    log('weather-test', '✅ Demo mode: Using sample data');
-                    log('weather-test', `✅ ${city}: 22°C, clear sky (demo)`);
-                } else {
-                    log('weather-test', `❌ Error: ${data.message}`, true);
-                }
-            } catch (error) {
-                log('weather-test', `❌ Error: ${error.message}`, true);
-            }
-        }
-        
-        // Auto-run basic tests
-        window.onload = function() {
-            testBasicJS();
-            testAPI();
-        };
-    </script>
+  <main class="app-main">
+    <section class="ui-card">
+      <div class="title">Network</div>
+      <pre class="debug-pre" id="net">—</pre>
+      <button class="pill" id="copyNet">Copy JSON</button>
+    </section>
+    <section class="ui-card">
+      <div class="title">Geolocation</div>
+      <pre class="debug-pre" id="geo">—</pre>
+      <button class="pill" id="copyGeo">Copy JSON</button>
+    </section>
+    <section class="ui-card">
+      <div class="title">Storage</div>
+      <pre class="debug-pre" id="storage">—</pre>
+      <button class="pill" id="copyStore">Copy JSON</button>
+    </section>
+  </main>
 </body>
 </html>

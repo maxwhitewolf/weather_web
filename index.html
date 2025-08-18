@@ -1,295 +1,171 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WeatherX</title>
   <link rel="stylesheet" href="css/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Linking BoxIcon for Icon -->
-  <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
-  <!-- Favicon -->
-  <link rel="icon" href="icons/favicon.svg" />
-  <title>Weatherly - Modern Weather App</title>
-  <!-- Chart.js for data visualization -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Leaflet for interactive maps -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet & Chart.js (use existing local bundles if you already include them) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="js/script.js"></script>
 </head>
 <body>
-  <!-- Background with animated particles -->
-  <div class="background-animation">
-    <div class="particles"></div>
-  </div>
-
-  <!-- Main content -->
-  <div class="wrapper">
-    <!-- Header with navigation -->
-    <header class="app-header">
-      <div class="header-content">
-        <div class="logo-section">
-          <i class="bx bx-left-arrow-alt back-btn" aria-label="Go back"></i>
-          <h1 class="app-title">Weatherly</h1>
-        </div>
-        <div class="header-controls">
-          <button class="settings-btn" aria-label="Settings">
-            <i class="bx bx-cog"></i>
-          </button>
-          <button class="theme-toggle" aria-label="Toggle dark mode">
-            <i class="bx bx-moon"></i>
-          </button>
-        </div>
+  <!-- Top Navbar -->
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="app-title">WeatherX</h1>
+      <nav class="nav-links" role="tablist" aria-label="Sections">
+        <a class="nav-link" href="#overview" data-target="#overview" role="tab">Overview</a>
+        <a class="nav-link" href="#map" data-target="#map" role="tab">Map</a>
+        <a class="nav-link" href="#hourly" data-target="#hourly" role="tab">Hourly</a>
+        <a class="nav-link" href="#daily" data-target="#daily" role="tab">7-Day</a>
+        <a class="nav-link" href="#settings" data-target="#settings" role="tab">Settings</a>
+      </nav>
+      <div class="quick-actions">
+        <button class="theme-toggle btn-ghost" aria-label="Theme"><span class="i i-moon"></span></button>
+        <button class="unit-btn btn-ghost" data-units="metric" aria-label="Units">°C</button>
       </div>
-    </header>
+    </div>
+  </header>
 
+  <main class="app-main">
     <!-- Search Section -->
-    <section class="search-section">
-      <div class="search-container">
-        <div class="search-input-group">
-          <div class="input-wrapper">
-            <i class="bx bx-search search-icon"></i>
-            <input
-              type="text"
-              class="search-input"
-              spellcheck="false"
-              placeholder="Enter city name..."
-              aria-label="Search for a city"
-              required
-            />
-            <button class="clear-btn" aria-label="Clear search">
-              <i class="bx bx-x"></i>
-            </button>
-          </div>
-          <button class="location-btn" aria-label="Use current location">
-            <i class="bx bx-location-plus"></i>
-            <span>Current Location</span>
-          </button>
-        </div>
-        <div class="info-message" role="status" aria-live="polite"></div>
+    <section class="search-section reveal">
+      <div class="search-container command-bar">
+        <span class="i i-search"></span>
+        <input class="search-input" type="text" placeholder="Search city… (Press Enter)" aria-label="Search city" />
+        <button class="clear-btn btn-ghost" aria-label="Clear"><span class="i i-x"></span></button>
+        <button class="location-btn pill" aria-label="Use current"><span class="i i-target"></span>Use current</button>
       </div>
+
+      
+
+             <p class="info-message" role="status" aria-live="polite">Detecting your location...</p>
     </section>
 
-    <!-- Main Weather Display -->
-    <section class="weather-display">
-      <div class="current-weather-card">
-        <div class="weather-header">
-          <div class="weather-icon-container">
-            <img src="" alt="Weather condition" class="weather-icon" />
-            <div class="weather-animation"></div>
-          </div>
-          <div class="temperature-display">
-            <div class="current-temp">
-              <span class="temp-value">--</span>
-              <span class="temp-unit">°C</span>
-            </div>
-            <div class="feels-like">
-              Feels like <span class="feels-temp">--</span>°C
-            </div>
+    <!-- Overview -->
+    <section id="overview" class="overview-grid">
+      <div class="ui-card current-weather-card skeleton">
+        <div class="cw-head">
+          <img class="weather-icon" alt="Weather icon" />
+          <div class="cw-meta">
+            <div class="location-text">—</div>
+            <div class="weather-description text-subtle">—</div>
+            <div class="weather-time text-subtle">—</div>
           </div>
         </div>
-        
-        <div class="weather-details">
-          <div class="location-info">
-            <i class="bx bx-map-pin"></i>
-            <span class="location-text">--, --</span>
-          </div>
-          <div class="weather-description">--</div>
-          <div class="weather-time">--</div>
+        <div class="cw-temp">
+          <span class="temp-value">--</span><span class="temp-unit">°C</span>
+          <span class="feels-temp badge">Feels like --°</span>
         </div>
+      </div>
 
-        <!-- Weather Metrics Grid -->
-        <div class="weather-metrics">
+      <div class="ui-card weather-metrics skeleton">
+        <div class="title">Now · Metrics</div>
+        <div class="metrics-grid">
           <div class="metric-card" data-metric="humidity">
-            <div class="metric-icon">
-              <i class="bx bxs-droplet-half"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">Humidity</span>
-            </div>
-            <div class="metric-progress">
-              <div class="progress-bar" style="width: 0%"></div>
-            </div>
+            <span class="label">Humidity</span><span class="metric-value">--%</span>
+            <div class="progress-bar"><i style="--w:0%"></i></div>
           </div>
-
           <div class="metric-card" data-metric="wind">
-            <div class="metric-icon">
-              <i class="bx bx-wind"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">Wind Speed</span>
-            </div>
-            <div class="wind-direction">
-              <i class="bx bx-navigation"></i>
-            </div>
+            <span class="label">Wind</span><span class="metric-value">--</span>
+            <div class="wind-direction"><i class="i i-arrow" style="--deg:0"></i></div>
           </div>
-
           <div class="metric-card" data-metric="pressure">
-            <div class="metric-icon">
-              <i class="bx bx-bar-chart-alt-2"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">Pressure</span>
-            </div>
+            <span class="label">Pressure</span><span class="metric-value">--</span>
+            <div class="progress-bar"><i style="--w:0%"></i></div>
           </div>
-
           <div class="metric-card" data-metric="visibility">
-            <div class="metric-icon">
-              <i class="bx bx-show"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">Visibility</span>
-            </div>
+            <span class="label">Visibility</span><span class="metric-value">--</span>
+            <div class="progress-bar"><i style="--w:0%"></i></div>
           </div>
-
           <div class="metric-card" data-metric="uv">
-            <div class="metric-icon">
-              <i class="bx bx-sun"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">UV Index</span>
-            </div>
-            <div class="uv-level">--</div>
+            <span class="label">UV Index</span><span class="metric-value"><span class="dot ok"></span><span class="uv-level">--</span></span>
           </div>
-
           <div class="metric-card" data-metric="air-quality">
-            <div class="metric-icon">
-              <i class="bx bx-wind"></i>
-            </div>
-            <div class="metric-content">
-              <span class="metric-value">--</span>
-              <span class="metric-label">Air Quality</span>
-            </div>
-            <div class="aqi-level">--</div>
+            <span class="label">Air Quality</span><span class="metric-value"><span class="dot ok"></span><span class="aqi-level">--</span></span>
           </div>
         </div>
       </div>
 
-      <!-- Sunrise/Sunset Section -->
-      <div class="sun-times-card">
-        <h3 class="card-title">Sun Times</h3>
+      <div class="ui-card sun-times-card skeleton">
+        <div class="title">Sunrise & Sunset</div>
+        <div class="sun-arc"><!-- SVG injected by JS --></div>
         <div class="sun-times">
-          <div class="sun-time sunrise">
-            <i class="bx bx-sun"></i>
-            <div class="time-info">
-              <span class="time-label">Sunrise</span>
-              <span class="time-value">--:--</span>
-            </div>
-          </div>
-          <div class="sun-progress">
-            <div class="progress-line">
-              <div class="sun-position"></div>
-            </div>
-          </div>
-          <div class="sun-time sunset">
-            <i class="bx bx-sun"></i>
-            <div class="time-info">
-              <span class="time-label">Sunset</span>
-              <span class="time-value">--:--</span>
-            </div>
-          </div>
+          <div class="sunrise"><span class="label">Sunrise</span><span class="time-value">--:--</span></div>
+          <div class="sunset"><span class="label">Sunset</span><span class="time-value">--:--</span></div>
         </div>
       </div>
     </section>
 
-    <!-- Interactive Map Section -->
-    <section class="map-section">
-      <div class="map-container">
-        <h3 class="section-title">Weather Map</h3>
-        <div id="weather-map" class="weather-map"></div>
-        <div class="map-controls">
-          <button class="map-layer-btn active" data-layer="temperature">
-            <i class="bx bx-thermometer"></i>
-            Temperature
-          </button>
-          <button class="map-layer-btn" data-layer="precipitation">
-            <i class="bx bx-cloud-rain"></i>
-            Precipitation
-          </button>
-          <button class="map-layer-btn" data-layer="wind">
-            <i class="bx bx-wind"></i>
-            Wind
-          </button>
+    <!-- Map -->
+    <section id="map" class="map-section reveal">
+      <div class="ui-card map-container skeleton">
+        <div class="segmented" role="tablist" aria-label="Map layers">
+          <button class="seg-btn active" data-layer="temp" role="tab">Temperature</button>
+          <button class="seg-btn" data-layer="precip" role="tab">Precipitation</button>
+          <button class="seg-btn" data-layer="wind" role="tab">Wind</button>
+        </div>
+        <div id="weather-map" aria-label="Weather map"></div>
+        <div class="map-legend">—</div>
+      </div>
+    </section>
+
+    <!-- Hourly -->
+    <section id="hourly" class="reveal">
+      <div class="ui-card chart-container skeleton">
+        <div class="card-head">
+          <div class="title">Next hours</div>
+          <div class="controls">
+            <button class="range-toggle btn-ghost" data-range="24h">24h</button>
+            <button class="range-toggle btn-ghost" data-range="48h">48h</button>
+          </div>
+        </div>
+        <canvas id="hourly-chart" height="220"></canvas>
+      </div>
+    </section>
+
+    <!-- Daily -->
+    <section id="daily" class="reveal">
+      <div class="ui-card skeleton">
+        <div class="title">7-Day Forecast</div>
+        <div class="forecast-grid">
+          <!-- .forecast-day cards generated by JS -->
         </div>
       </div>
     </section>
 
-    <!-- Hourly Forecast Chart -->
-    <section class="hourly-forecast-section">
-      <div class="chart-container">
-        <h3 class="section-title">24-Hour Forecast</h3>
-        <div class="chart-wrapper">
-          <canvas id="hourly-chart"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- Daily Forecast -->
-    <section class="daily-forecast-section">
-      <h3 class="section-title">7-Day Forecast</h3>
-      <div class="forecast-grid"></div>
-    </section>
-
-    <!-- Settings Panel -->
-    <div class="settings-panel" hidden>
-      <div class="settings-content">
-        <div class="settings-header">
-          <h3>Settings</h3>
-          <button class="close-settings" aria-label="Close settings">
-            <i class="bx bx-x"></i>
-          </button>
-        </div>
-        <div class="settings-body">
+    <!-- Settings Section -->
+    <section id="settings" class="reveal">
+      <div class="ui-card">
+        <div class="title">Settings</div>
+        <div class="settings-grid">
           <div class="setting-group">
-            <label>Temperature Unit</label>
+            <div class="group-title">Temperature Units</div>
             <div class="unit-toggle">
-              <button class="unit-btn active" data-unit="celsius">°C</button>
-              <button class="unit-btn" data-unit="fahrenheit">°F</button>
+              <button class="unit-btn" data-units="metric">Metric (°C, m/s)</button>
+              <button class="unit-btn" data-units="imperial">Imperial (°F, mph)</button>
             </div>
           </div>
           <div class="setting-group">
-            <label>Theme</label>
+            <div class="group-title">Accent Color</div>
             <div class="theme-colors">
-              <button class="color-btn" data-color="#495af7" style="background: #495af7"></button>
-              <button class="color-btn" data-color="#ff6b6b" style="background: #ff6b6b"></button>
-              <button class="color-btn" data-color="#4ecdc4" style="background: #4ecdc4"></button>
-              <button class="color-btn" data-color="#45b7d1" style="background: #45b7d1"></button>
-              <button class="color-btn" data-color="#96ceb4" style="background: #96ceb4"></button>
-              <button class="color-btn" data-color="#feca57" style="background: #feca57"></button>
-            </div>
-          </div>
-          <div class="setting-group">
-            <label>Notifications</label>
-            <div class="notification-settings">
-              <label class="checkbox-label">
-                <input type="checkbox" id="rain-alerts">
-                <span class="checkmark"></span>
-                Rain alerts
-              </label>
-              <label class="checkbox-label">
-                <input type="checkbox" id="extreme-weather">
-                <span class="checkmark"></span>
-                Extreme weather warnings
-              </label>
+              <button class="color-btn" data-color="#4DD0E1">Cyan</button>
+              <button class="color-btn" data-color="#60A5FA">Blue</button>
+              <button class="color-btn" data-color="#9D7DFF">Violet</button>
+              <button class="color-btn" data-color="#FF6BBA">Pink</button>
+              <button class="color-btn" data-color="#A3E635">Lime</button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-  <!-- Loading Overlay -->
-  <div class="loading-overlay" hidden>
-    <div class="loading-spinner">
-      <div class="spinner"></div>
-      <p>Loading weather data...</p>
-    </div>
-  </div>
-
-  <!-- Scripts -->
-  <script src="js/script.js"></script>
+  <footer class="site-footer">Powered by OpenWeather · © <span id="year"></span></footer>
 </body>
 </html>
