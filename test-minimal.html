@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Weather Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #495af7, #6b7cff);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .loading {
+            display: block;
+        }
+        
+        .loading.hidden {
+            display: none;
+        }
+        
+        .weather-data {
+            display: none;
+        }
+        
+        .weather-data.show {
+            display: block;
+        }
+        
+        .temp {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .city {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 18px;
+            opacity: 0.8;
+        }
+        
+        button {
+            background: white;
+            color: #495af7;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Test</h1>
+        
+        <div id="loading" class="loading">
+            <p>Loading weather data...</p>
+        </div>
+        
+        <div id="weather" class="weather-data">
+            <div class="city" id="city">--</div>
+            <div class="temp" id="temp">--°C</div>
+            <div class="description" id="desc">--</div>
+        </div>
+        
+        <div id="controls" style="display: none;">
+            <button onclick="loadWeather()">Load Weather</button>
+            <button onclick="showDemo()">Show Demo</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 Script started');
+        
+        const loading = document.getElementById('loading');
+        const weather = document.getElementById('weather');
+        const controls = document.getElementById('controls');
+        
+        function hideLoading() {
+            console.log('✅ Hiding loading...');
+            loading.classList.add('hidden');
+        }
+        
+        function showWeather() {
+            console.log('🌤️ Showing weather...');
+            weather.classList.add('show');
+            controls.style.display = 'block';
+        }
+        
+        function showDemo() {
+            console.log('🎭 Showing demo data...');
+            document.getElementById('city').textContent = 'London';
+            document.getElementById('temp').textContent = '22°C';
+            document.getElementById('desc').textContent = 'Clear sky';
+            hideLoading();
+            showWeather();
+        }
+        
+        function loadWeather() {
+            console.log('🔍 Loading weather...');
+            loading.classList.remove('hidden');
+            weather.classList.remove('show');
+            
+            // Simulate API call
+            setTimeout(() => {
+                console.log('📡 API call completed');
+                showDemo();
+            }, 2000);
+        }
+        
+        // Auto-start after 1 second
+        setTimeout(() => {
+            console.log('⏰ Auto-starting...');
+            loadWeather();
+        }, 1000);
+        
+        console.log('✅ Script loaded');
+    </script>
+</body>
+</html>

@@ -8,132 +8,288 @@
   <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
   <!-- Favicon -->
   <link rel="icon" href="icons/favicon.svg" />
-  <title>Weather Web App</title>
+  <title>Weatherly - Modern Weather App</title>
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Leaflet for interactive maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+  <!-- Background with animated particles -->
+  <div class="background-animation">
+    <div class="particles"></div>
+  </div>
+
   <!-- Main content -->
   <div class="wrapper">
-    <div class="container">
-  </div>
-    <header><i class="bx bx-left-arrow-alt"></i>Weather App</header>
-    <section class="input-part">
-      <p class="info-txt"></p>
-      <div class="content">
-        <input
-          type="text"
-          spellcheck="false"
-          placeholder="Enter City Name"
-          required
-        />
-        <div class="separator"></div>
-        <button>Location auto-detect</button>
+    <!-- Header with navigation -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo-section">
+          <i class="bx bx-left-arrow-alt back-btn" aria-label="Go back"></i>
+          <h1 class="app-title">Weatherly</h1>
+        </div>
+        <div class="header-controls">
+          <button class="settings-btn" aria-label="Settings">
+            <i class="bx bx-cog"></i>
+          </button>
+          <button class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="bx bx-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="search-container">
+        <div class="search-input-group">
+          <div class="input-wrapper">
+            <i class="bx bx-search search-icon"></i>
+            <input
+              type="text"
+              class="search-input"
+              spellcheck="false"
+              placeholder="Enter city name..."
+              aria-label="Search for a city"
+              required
+            />
+            <button class="clear-btn" aria-label="Clear search">
+              <i class="bx bx-x"></i>
+            </button>
+          </div>
+          <button class="location-btn" aria-label="Use current location">
+            <i class="bx bx-location-plus"></i>
+            <span>Current Location</span>
+          </button>
+        </div>
+        <div class="info-message" role="status" aria-live="polite"></div>
       </div>
     </section>
-    <section class="weather-part">
-      <img src="" alt="Weather Icon" />
-      <div class="temp">
-        <span class="numb">_</span>
-        <span class="deg">°</span>C
-      </div>
-      <div class="weather">_ _</div>
-      <div class="location">
-        <i class="bx bx-map"></i>
-        <span>_, _</span>
-      </div>
-      <div class="bottom-details">
-        <div class="column feels">
-          <i class="bx bxs-thermometer"></i>
-          <div class="details">
-            <div class="temp">
-              <span class="numb-2">_</span>
-              <span class="deg">°</span>C
+
+    <!-- Main Weather Display -->
+    <section class="weather-display">
+      <div class="current-weather-card">
+        <div class="weather-header">
+          <div class="weather-icon-container">
+            <img src="" alt="Weather condition" class="weather-icon" />
+            <div class="weather-animation"></div>
+          </div>
+          <div class="temperature-display">
+            <div class="current-temp">
+              <span class="temp-value">--</span>
+              <span class="temp-unit">°C</span>
             </div>
-            <p>Feels like</p>
+            <div class="feels-like">
+              Feels like <span class="feels-temp">--</span>°C
+            </div>
           </div>
         </div>
-        <div class="column humidity">
-          <i class="bx bxs-droplet-half"></i>
-          <div class="details">
-            <span>_</span>
-            <p>Humidity</p>
+        
+        <div class="weather-details">
+          <div class="location-info">
+            <i class="bx bx-map-pin"></i>
+            <span class="location-text">--, --</span>
+          </div>
+          <div class="weather-description">--</div>
+          <div class="weather-time">--</div>
+        </div>
+
+        <!-- Weather Metrics Grid -->
+        <div class="weather-metrics">
+          <div class="metric-card" data-metric="humidity">
+            <div class="metric-icon">
+              <i class="bx bxs-droplet-half"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">Humidity</span>
+            </div>
+            <div class="metric-progress">
+              <div class="progress-bar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="metric-card" data-metric="wind">
+            <div class="metric-icon">
+              <i class="bx bx-wind"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">Wind Speed</span>
+            </div>
+            <div class="wind-direction">
+              <i class="bx bx-navigation"></i>
+            </div>
+          </div>
+
+          <div class="metric-card" data-metric="pressure">
+            <div class="metric-icon">
+              <i class="bx bx-bar-chart-alt-2"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">Pressure</span>
+            </div>
+          </div>
+
+          <div class="metric-card" data-metric="visibility">
+            <div class="metric-icon">
+              <i class="bx bx-show"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">Visibility</span>
+            </div>
+          </div>
+
+          <div class="metric-card" data-metric="uv">
+            <div class="metric-icon">
+              <i class="bx bx-sun"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">UV Index</span>
+            </div>
+            <div class="uv-level">--</div>
+          </div>
+
+          <div class="metric-card" data-metric="air-quality">
+            <div class="metric-icon">
+              <i class="bx bx-wind"></i>
+            </div>
+            <div class="metric-content">
+              <span class="metric-value">--</span>
+              <span class="metric-label">Air Quality</span>
+            </div>
+            <div class="aqi-level">--</div>
           </div>
         </div>
-        <div class="column wind">
-          <i class="bx bx-wind"></i>
-          <div class="details">
-            <span>_</span>
-            <p>Wind Speed</p>
+      </div>
+
+      <!-- Sunrise/Sunset Section -->
+      <div class="sun-times-card">
+        <h3 class="card-title">Sun Times</h3>
+        <div class="sun-times">
+          <div class="sun-time sunrise">
+            <i class="bx bx-sun"></i>
+            <div class="time-info">
+              <span class="time-label">Sunrise</span>
+              <span class="time-value">--:--</span>
+            </div>
           </div>
-        </div>
-        <div class="column date-time">
-          <i class="bx bx-time"></i>
-          <div class="details">
-            <span>_</span>
-            <p>Date & Time</p>
+          <div class="sun-progress">
+            <div class="progress-line">
+              <div class="sun-position"></div>
+            </div>
+          </div>
+          <div class="sun-time sunset">
+            <i class="bx bx-sun"></i>
+            <div class="time-info">
+              <span class="time-label">Sunset</span>
+              <span class="time-value">--:--</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
-    <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Canvas for Weather Chart -->
-  
-
-    <!-- Forecast for Next 7 Days -->
-    <section class="forecast" hidden>
-      <section class="charts" id="chartSection">
-        <canvas id="weatherChart"></canvas>
-      </section>
-      <div class="forecast-details"></div>
+    <!-- Interactive Map Section -->
+    <section class="map-section">
+      <div class="map-container">
+        <h3 class="section-title">Weather Map</h3>
+        <div id="weather-map" class="weather-map"></div>
+        <div class="map-controls">
+          <button class="map-layer-btn active" data-layer="temperature">
+            <i class="bx bx-thermometer"></i>
+            Temperature
+          </button>
+          <button class="map-layer-btn" data-layer="precipitation">
+            <i class="bx bx-cloud-rain"></i>
+            Precipitation
+          </button>
+          <button class="map-layer-btn" data-layer="wind">
+            <i class="bx bx-wind"></i>
+            Wind
+          </button>
+        </div>
+      </div>
     </section>
+
+    <!-- Hourly Forecast Chart -->
+    <section class="hourly-forecast-section">
+      <div class="chart-container">
+        <h3 class="section-title">24-Hour Forecast</h3>
+        <div class="chart-wrapper">
+          <canvas id="hourly-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daily Forecast -->
+    <section class="daily-forecast-section">
+      <h3 class="section-title">7-Day Forecast</h3>
+      <div class="forecast-grid"></div>
+    </section>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" hidden>
+      <div class="settings-content">
+        <div class="settings-header">
+          <h3>Settings</h3>
+          <button class="close-settings" aria-label="Close settings">
+            <i class="bx bx-x"></i>
+          </button>
+        </div>
+        <div class="settings-body">
+          <div class="setting-group">
+            <label>Temperature Unit</label>
+            <div class="unit-toggle">
+              <button class="unit-btn active" data-unit="celsius">°C</button>
+              <button class="unit-btn" data-unit="fahrenheit">°F</button>
+            </div>
+          </div>
+          <div class="setting-group">
+            <label>Theme</label>
+            <div class="theme-colors">
+              <button class="color-btn" data-color="#495af7" style="background: #495af7"></button>
+              <button class="color-btn" data-color="#ff6b6b" style="background: #ff6b6b"></button>
+              <button class="color-btn" data-color="#4ecdc4" style="background: #4ecdc4"></button>
+              <button class="color-btn" data-color="#45b7d1" style="background: #45b7d1"></button>
+              <button class="color-btn" data-color="#96ceb4" style="background: #96ceb4"></button>
+              <button class="color-btn" data-color="#feca57" style="background: #feca57"></button>
+            </div>
+          </div>
+          <div class="setting-group">
+            <label>Notifications</label>
+            <div class="notification-settings">
+              <label class="checkbox-label">
+                <input type="checkbox" id="rain-alerts">
+                <span class="checkmark"></span>
+                Rain alerts
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="extreme-weather">
+                <span class="checkmark"></span>
+                Extreme weather warnings
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- Dark mode toggle -->
-  <div class="dark-mode">
-    <span class="dark-mode-btn">
-      <i class="bx bx-moon"></i>
-    </span>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" hidden>
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Loading weather data...</p>
+    </div>
   </div>
-  <!-- Color picker -->
-  <div class="color-palette">
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-    <span class="theme-color"></span>
-  </div>
-  <section class="copyright">
-    <p>
-      Made with ❤️ by <a href="https://github.com/abdellatif-laghjaj" target="_blank">Abdellatif Laghjaj</a>
-    </p>
-  </section>
+
   <!-- Scripts -->
   <script src="js/script.js"></script>
-  <script>
-    // Get references to DOM elements
-    const detectBtn = document.querySelector('.input-part button');
-    const backIcon = document.getElementById('backIcon');
-    
-    // Add click event listener to detectBtn
-    detectBtn.addEventListener('click', () => {
-      // Toggle visibility of forecastSection
-      const forecastSection = document.querySelector('.forecast');
-      forecastSection.removeAttribute('hidden');
-      
-      // Call function to update chart (if needed)
-      updateChart(); // Replace with your chart update function
-    });
-    
-    // Add click event listener to backIcon
-    backIcon.addEventListener('click', () => {
-      // Reload the page
-      location.reload();
-    });
-  </script>
-  
 </body>
 </html>
